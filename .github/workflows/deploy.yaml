@@ -47,7 +47,7 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ./terraform
-        run: terraform destroy -auto-approve  # Aplica as mudanças sem pedir confirmação
+        run: terraform destroy -auto-approve
 
       #- name: Login no AWS ECR
       #  run: |
