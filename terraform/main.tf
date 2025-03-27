@@ -50,9 +50,7 @@ resource "aws_dynamodb_table" "terraform_locks" {
     type = "S"
   }
 }
-                sudo systemctl enable mongodb
-              EOF
-}
+
 
 
 resource "aws_instance" "mongo_instance" {
@@ -69,5 +67,8 @@ resource "aws_instance" "mongo_instance" {
                 sudo apt update
                 sudo apt install -y mongodb
                 sudo systemctl start mongodb
+                sudo systemctl enable mongodb
+              EOF
+}
 
 
