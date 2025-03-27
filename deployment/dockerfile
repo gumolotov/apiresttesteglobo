@@ -4,7 +4,7 @@ FROM node:16-alpine AS build
 WORKDIR /app
 
 # Copiar o package.json e o package-lock.json para dentro do contêiner
-COPY /API/package*.json ./
+COPY /API/package.json ./
 
 # Instalar as dependências
 RUN npm install
