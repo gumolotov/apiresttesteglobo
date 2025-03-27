@@ -20,9 +20,9 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
         
         
-      - name: Login no AWS ECR
-        run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 339712833448.dkr.ecr.us-east-1.amazonaws.com/apirestglobo
+      #- name: Login no AWS ECR
+      #  run: |
+      #    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 339712833448.dkr.ecr.us-east-1.amazonaws.com/apirestglobo
 
       - name: Construir e enviar a imagem Docker
         run: |
