@@ -16,7 +16,7 @@ resource "aws_ecs_task_definition" "api_task" {
   network_mode             = "awsvpc"
   cpu                      = "256"
   memory                   = "512"
-  execution_role_arn       = "arn:aws:iam::339712833448:role/ecsTaskExecutionRole"
+  execution_role_arn       = "arn:aws:iam::339712833448:role/restapi-ecs-task-role"
 
   container_definitions = jsonencode([
     {
