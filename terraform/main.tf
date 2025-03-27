@@ -36,7 +36,7 @@ resource "aws_ecs_task_definition" "api_task" {
 }
 
 resource "aws_instance" "mongo_instance" {
-  ami                    = "ami-0c55b159cbfafe1f0"  # Substitua pela AMI de sua preferência
+  ami                    = "ami-071226ecf16aa7d96"  # Substitua pela AMI de sua preferência
   instance_type           = "t2.micro"  # Substitua pelo tipo de instância desejado
   key_name                = "restapi"  # Substitua pela chave SSH que você vai usar
 
