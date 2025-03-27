@@ -11,7 +11,7 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan('combined'));
 
-mongoose.connect('mongodb://mongo:27017/comentarios', {
+mongoose.connect('mongodb://34.238.51.238:27017/comentarios', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
