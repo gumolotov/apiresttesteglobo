@@ -35,7 +35,7 @@ jobs:
         
       - name: terraform state list
         working-directory: ./terraform
-        run: terraform terraform state list
+        run: terraform state list
       
       - name: terraform refresh
         working-directory: ./terraform
