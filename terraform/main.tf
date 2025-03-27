@@ -79,8 +79,8 @@ resource "aws_iam_policy_attachment" "ecs_task_execution" {
 
 resource "aws_ecs_service" "api-comentarios" {
   name            = "api-comentarios"
-  cluster         = aws_ecs_cluster.api-cluster.id
-  task_definition = aws_ecs_task_definition.api-comentarios-task.arn
+  cluster         = aws_ecs_cluster.api_cluster.id
+  task_definition = aws_ecs_task_definition.api_task.arn
   desired_count   = 1
   launch_type     = "FARGATE"
   network_configuration {
