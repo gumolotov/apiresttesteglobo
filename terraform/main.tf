@@ -119,7 +119,7 @@ resource "aws_lb" "ecs_alb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets           = ["subnet-082cfefbc739f24b4"] # Ajuste conforme sua infraestrutura
+  subnets           = ["subnet-082cfefbc739f24b4", "subnet-01f6e009cec9021d9"] # Ajuste conforme sua infraestrutura
 
   enable_deletion_protection = false
 }
