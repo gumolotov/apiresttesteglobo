@@ -61,4 +61,4 @@ jobs:
 
       - name: Atualizar serviço ECS
         run: |
-          aws ecs update-service --cluster api-cluster --service api-comentarios --force-new-deployment
+          aws ecs update-service --cluster api-cluster --service api-comentarios-task --force-new-deployment
