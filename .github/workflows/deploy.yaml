@@ -33,6 +33,14 @@ jobs:
                        -backend-config="encrypt=true" \
                        -backend-config="dynamodb_table=terraform-locks" 
         
+      - name: terraform state list
+        working-directory: ./terraform
+        run: terraform terraform state list
+      
+      - name: terraform refresh
+        working-directory: ./terraform
+        run: terraform refresh
+      
       - name: Terraform Plan
         working-directory: ./terraform
         run: terraform plan
