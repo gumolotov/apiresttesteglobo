@@ -25,16 +25,6 @@ resource "aws_ecs_task_definition" "api_task" {
       image     = "${aws_ecr_repository.api_repository.repository_url}:latest"
       essential = true
       portMappings = [{ containerPort = 80, hostPort = 80 }]
-    },
-    {
-      name  = "prometheus"
-      image = "prom/prometheus"
-      portMappings = [{ containerPort = 9090, hostPort = 9090 }]
-    },
-    {
-      name  = "grafana"
-      image = "grafana/grafana"
-      portMappings = [{ containerPort = 3000, hostPort = 3000 }]
     }
   ])
 }
@@ -80,19 +70,6 @@ resource "aws_iam_policy_attachment" "ecs_task_execution" {
   roles      = [aws_iam_role.restapi.name]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
-
-#resource "aws_ecs_service" "api-comentarios" {
-#  name            = "api-comentarios"
-#  cluster         = aws_ecs_cluster.api_cluster.id
-#  task_definition = aws_ecs_task_definition.api_task.arn
-#  desired_count   = 1
-#  launch_type     = "FARGATE"
-#  network_configuration {
-#    subnets          = ["subnet-082cfefbc739f24b4", "subnet-01f6e009cec9021d9"]  # Substitua pelos IDs das suas subnets
-#    security_groups = ["sg-0f6507adfb717958a"]  # Substitua pelo seu ID de Security Group
-#    assign_public_ip = true
-#  }
-#}
 
 # Criando Security Group para o Load Balancer
 resource "aws_security_group" "alb_sg" {
