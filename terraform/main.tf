@@ -81,18 +81,18 @@ resource "aws_iam_policy_attachment" "ecs_task_execution" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_ecs_service" "api-comentarios" {
-  name            = "api-comentarios"
-  cluster         = aws_ecs_cluster.api_cluster.id
-  task_definition = aws_ecs_task_definition.api_task.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
-  network_configuration {
-    subnets          = ["subnet-082cfefbc739f24b4", "subnet-01f6e009cec9021d9"]  # Substitua pelos IDs das suas subnets
-    security_groups = ["sg-0f6507adfb717958a"]  # Substitua pelo seu ID de Security Group
-    assign_public_ip = true
-  }
-}
+#resource "aws_ecs_service" "api-comentarios" {
+#  name            = "api-comentarios"
+#  cluster         = aws_ecs_cluster.api_cluster.id
+#  task_definition = aws_ecs_task_definition.api_task.arn
+#  desired_count   = 1
+#  launch_type     = "FARGATE"
+#  network_configuration {
+#    subnets          = ["subnet-082cfefbc739f24b4", "subnet-01f6e009cec9021d9"]  # Substitua pelos IDs das suas subnets
+#    security_groups = ["sg-0f6507adfb717958a"]  # Substitua pelo seu ID de Security Group
+#    assign_public_ip = true
+#  }
+#}
 
 # Criando Security Group para o Load Balancer
 resource "aws_security_group" "alb_sg" {
@@ -146,7 +146,7 @@ resource "aws_lb_listener" "http_listener" {
 }
 
 # Associando o Target Group ao ECS Service
-resource "aws_ecs_service" "ecs_service" {
+resource "aws_ecs_service" "api-comentarios" {
   name            = "api-comentarios"
   cluster         = "api-cluster"
   task_definition = "api-comentarios-task"
