@@ -54,4 +54,44 @@ resource "aws_instance" "mongo_instance" {
               EOF
 }
 
+resource "aws_iam_role" "restapi" {
+  name = "restapi-ecs-task-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "ecs-tasks.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy_attachment" "ecs_task_execution" {
+  name       = "ecs-task-execution"
+  roles      = [aws_iam_role.example.name]
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_ecs_service" "api-comentarios" {
+  name            = "api-comentarios"
+  cluster         = api-cluster
+  task_definition = api-comentarios-task
+  desired_count   = 1
+  launch_type     = "FARGATE"
+  network_configuration {
+    subnets          = ["subnet-082cfefbc739f24b4", "subnet-01f6e009cec9021d9"]  # Substitua pelos IDs das suas subnets
+    security_groups = ["sg-0f6507adfb717958a"]  # Substitua pelo seu ID de Security Group
+    assign_public_ip = true
+  }
+}
+
+
+
+
+
 
