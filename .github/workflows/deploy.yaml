@@ -27,8 +27,8 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./terraform
         run: |
-          terraform init -backend-config="bucket=nome-do-seu-bucket-terraform-state" \
-                       -backend-config="key=terraform/production/terraform.tfstate" \
+          terraform init -backend-config="bucket=terraform-state-restapi-globo" \
+                       -backend-config="key=terraform/terraform.tfstate" \
                        -backend-config="region=us-east-1" \
                        -backend-config="encrypt=true" \
                        -backend-config="dynamodb_table=terraform-locks" 
