@@ -35,15 +35,13 @@ resource "aws_ecs_task_definition" "api_task" {
   ])
 }
 
-resource "aws_ecs_service" "api_service" {
-  name            = "api-comentarios"
-  cluster         = aws_ecs_cluster.api_cluster.id
-  task_definition = aws_ecs_task_definition.api_task.arn
-  desired_count   = 2
-  launch_type     = "FARGATE"
-
-  network_configuration {
-    subnets = ["subnet-xxxxxx"]
-    security_groups = ["sg-xxxxxx"]
-  }
+resource "aws_db_instance" "mongo" {
+  identifier             = "mongo-db-instance"
+  allocated_storage      = 20
+  engine                = "mongodb"
+  instance_class        = "db.t3.micro"
+  username             = "admin"
+  password             = "securepassword"
+  publicly_accessible  = true
+  skip_final_snapshot  = true
 }
