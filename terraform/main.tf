@@ -96,7 +96,7 @@ resource "aws_ecs_service" "api-comentarios" {
 
 # Criando Security Group para o Load Balancer
 resource "aws_security_group" "alb_sg" {
-  vpc_id = vpc-0a8377a7a720a612c
+  vpc_id = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -129,7 +129,7 @@ resource "aws_lb_target_group" "ecs_tg" {
   name     = "ecs-target-group"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = vpc-0a8377a7a720a612c
+  vpc_id   = var.vpc_id
   target_type = "ip" # Necessário para ECS Fargate
 }
 
