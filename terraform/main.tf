@@ -24,7 +24,8 @@ resource "aws_ecs_task_definition" "api_task" {
       name      = "api-comentarios"
       image     = "${aws_ecr_repository.api_repository.repository_url}:latest"
       essential = true
-      portMappings = [{ containerPort = 80, hostPort = 80 }]
+      portMappings = [{ containerPort = 3000, hostPort = 3000 }]
+      protocol     = "tcp"
     }
   ])
 }
