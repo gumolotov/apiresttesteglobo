@@ -73,14 +73,14 @@ resource "aws_iam_role" "restapi" {
 
 resource "aws_iam_policy_attachment" "ecs_task_execution" {
   name       = "ecs-task-execution"
-  roles      = [aws_iam_role.example.name]
+  roles      = [aws_iam_role.restapi.name]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
 resource "aws_ecs_service" "api-comentarios" {
   name            = "api-comentarios"
-  cluster         = api-cluster
-  task_definition = api-comentarios-task
+  cluster         = aws_ecs_cluster.api-cluster.id
+  task_definition = aws_ecs_task_definition.api-comentarios-task.arn
   desired_count   = 1
   launch_type     = "FARGATE"
   network_configuration {
