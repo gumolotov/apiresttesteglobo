@@ -35,22 +35,6 @@ resource "aws_ecs_task_definition" "api_task" {
   ])
 }
 
-resource "aws_instance" "mongo_instance" {
-  ami                    = "ami-071226ecf16aa7d96"  # Substitua pela AMI de sua preferência
-  instance_type           = "t2.micro"  # Substitua pelo tipo de instância desejado
-  key_name                = "restapi"  # Substitua pela chave SSH que você vai usar
-
-  tags = {
-    Name = "MongoDB Instance"
-  }
-
-  user_data = <<-EOF
-                #!/bin/bash
-                sudo apt update
-                sudo apt install -y mongodb
-                sudo systemctl start mongodb
-}
-
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "terraform-state-restapi-globo"
   acl    = "private"
@@ -69,3 +53,21 @@ resource "aws_dynamodb_table" "terraform_locks" {
                 sudo systemctl enable mongodb
               EOF
 }
+
+
+resource "aws_instance" "mongo_instance" {
+  ami                    = "ami-071226ecf16aa7d96"  # Substitua pela AMI de sua preferência
+  instance_type           = "t2.micro"  # Substitua pelo tipo de instância desejado
+  key_name                = "restapi"  # Substitua pela chave SSH que você vai usar
+
+  tags = {
+    Name = "MongoDB Instance"
+  }
+
+  user_data = <<-EOF
+                #!/bin/bash
+                sudo apt update
+                sudo apt install -y mongodb
+                sudo systemctl start mongodb
+
+
