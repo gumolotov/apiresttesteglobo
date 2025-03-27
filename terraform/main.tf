@@ -14,33 +14,28 @@ resource "aws_ecs_task_definition" "api_task" {
   family                   = "api-comentarios-task"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = "256"
-  memory                   = "512"
+  cpu                      = "512"
+  memory                   = "1024"
   execution_role_arn       = "arn:aws:iam::339712833448:role/restapi-ecs-task-role"
 
   container_definitions = jsonencode([
     {
       name      = "api-comentarios"
       image     = "${aws_ecr_repository.api_repository.repository_url}:latest"
-      cpu       = 256
-      memory    = 512
       essential = true
-      portMappings = [
-        {
-          containerPort = 80
-          hostPort      = 80
-        }
-      ]
+      portMappings = [{ containerPort = 80, hostPort = 80 }]
     },
     {
       name  = "prometheus"
       image = "prom/prometheus"
       portMappings = [{ containerPort = 9090, hostPort = 9090 }]
+      mountPoints = [{ sourceVolume = "prometheus-data", containerPath = "/prometheus" }]
     },
     {
       name  = "grafana"
       image = "grafana/grafana"
       portMappings = [{ containerPort = 3000, hostPort = 3000 }]
+      mountPoints = [{ sourceVolume = "grafana-data", containerPath = "/var/lib/grafana" }]
     }
   ])
 }
