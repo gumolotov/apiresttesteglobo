@@ -10,6 +10,17 @@ resource "aws_ecr_repository" "api_repository" {
   name = "api-comentarios"
 }
 
+resource "aws_efs_file_system" "efs_storage" {
+  creation_token = "efs-storage"
+}
+
+resource "aws_efs_mount_target" "efs_mount" {
+  file_system_id  = aws_efs_file_system.efs_storage.id
+  subnet_id       = aws_subnet.public_subnet.id
+  security_groups = [aws_security_group.comments_sg.id]
+}
+
+
 resource "aws_ecs_task_definition" "api_task" {
   family                   = "api-comentarios-task"
   requires_compatibilities = ["FARGATE"]
@@ -29,15 +40,23 @@ resource "aws_ecs_task_definition" "api_task" {
       name  = "prometheus"
       image = "prom/prometheus"
       portMappings = [{ containerPort = 9090, hostPort = 9090 }]
-      mountPoints = [{ sourceVolume = "prometheus-data", containerPath = "/prometheus" }]
+      mountPoints = [{ sourceVolume = "efs-storage", containerPath = "/prometheus" }]
     },
     {
       name  = "grafana"
       image = "grafana/grafana"
       portMappings = [{ containerPort = 3000, hostPort = 3000 }]
-      mountPoints = [{ sourceVolume = "grafana-data", containerPath = "/var/lib/grafana" }]
+      mountPoints = [{ sourceVolume = "efs-storage", containerPath = "/var/lib/grafana" }]
     }
   ])
+
+
+volume {
+    name = "efs-storage"
+    efs_volume_configuration {
+      file_system_id = aws_efs_file_system.efs_storage.id
+    }
+  }
 }
 
 
@@ -94,9 +113,3 @@ resource "aws_ecs_service" "api-comentarios" {
     assign_public_ip = true
   }
 }
-
-
-
-
-
-
