@@ -17,7 +17,7 @@ resource "aws_efs_file_system" "efs_storage" {
 resource "aws_efs_mount_target" "efs_mount" {
   file_system_id  = aws_efs_file_system.efs_storage.id
   subnet_id       = "subnet-082cfefbc739f24b4"
-  security_groups = "sg-0f6507adfb717958a"
+  security_groups = sg-0f6507adfb717958a
 }
 
 
