@@ -1,0 +1,19 @@
+FROM node:16-alpine AS build
+
+
+WORKDIR /app
+
+# Copiar o package.json e o package-lock.json para dentro do contêiner
+COPY package*.json ./
+
+# Instalar as dependências
+RUN npm install
+
+# Copiar todo o código da aplicação para dentro do contêiner
+COPY . ./API
+
+# Etapa 2: Expor a porta da API
+EXPOSE 3000
+
+# Rodar o servidor da API
+CMD ["node", "server.js"]
