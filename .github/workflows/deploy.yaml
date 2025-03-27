@@ -20,7 +20,7 @@ jobs:
         run: |
           docker build -t api-comentarios .
           docker tag api-comentarios:latest 339712833448.dkr.ecr.us-east-1.amazonaws.com/apirestglobo:latest
-          docker push <AWS_ECR_URL>:latest
+          docker push 339712833448.dkr.ecr.us-east-1.amazonaws.com/apirestglobo:latest
 
       - name: Atualizar serviço ECS
         run: |
