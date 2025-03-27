@@ -10,16 +10,6 @@ resource "aws_ecr_repository" "api_repository" {
   name = "api-comentarios"
 }
 
-resource "aws_efs_file_system" "efs_storage" {
-  creation_token = "efs-storage"
-}
-
-resource "aws_efs_mount_target" "efs_mount" {
-  file_system_id  = aws_efs_file_system.efs_storage.id
-  subnet_id       = "subnet-082cfefbc739f24b4"
-  security_groups = sg-0f6507adfb717958a
-}
-
 
 resource "aws_ecs_task_definition" "api_task" {
   family                   = "api-comentarios-task"
@@ -40,23 +30,13 @@ resource "aws_ecs_task_definition" "api_task" {
       name  = "prometheus"
       image = "prom/prometheus"
       portMappings = [{ containerPort = 9090, hostPort = 9090 }]
-      mountPoints = [{ sourceVolume = "efs-storage", containerPath = "/prometheus" }]
     },
     {
       name  = "grafana"
       image = "grafana/grafana"
       portMappings = [{ containerPort = 3000, hostPort = 3000 }]
-      mountPoints = [{ sourceVolume = "efs-storage", containerPath = "/var/lib/grafana" }]
     }
   ])
-
-
-volume {
-    name = "efs-storage"
-    efs_volume_configuration {
-      file_system_id = aws_efs_file_system.efs_storage.id
-    }
-  }
 }
 
 
@@ -112,4 +92,81 @@ resource "aws_ecs_service" "api-comentarios" {
     security_groups = ["sg-0f6507adfb717958a"]  # Substitua pelo seu ID de Security Group
     assign_public_ip = true
   }
+}
+
+# Criando Security Group para o Load Balancer
+resource "aws_security_group" "alb_sg" {
+  vpc_id = vpc-0a8377a7a720a612c
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Criando o Application Load Balancer
+resource "aws_lb" "ecs_alb" {
+  name               = "ecs-load-balancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets           = ["subnet-082cfefbc739f24b4"] # Ajuste conforme sua infraestrutura
+
+  enable_deletion_protection = false
+}
+
+# Criando o Target Group para as Tasks do ECS
+resource "aws_lb_target_group" "ecs_tg" {
+  name     = "ecs-target-group"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = vpc-0a8377a7a720a612c
+  target_type = "ip" # Necessário para ECS Fargate
+}
+
+# Criando Listener para rotear tráfego para ECS
+resource "aws_lb_listener" "http_listener" {
+  load_balancer_arn = aws_lb.ecs_alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ecs_tg.arn
+  }
+}
+
+# Associando o Target Group ao ECS Service
+resource "aws_ecs_service" "ecs_service" {
+  name            = "api-comentarios"
+  cluster         = "api-cluster"
+  task_definition = "api-comentarios-task"
+  launch_type     = "FARGATE"
+  desired_count   = 2
+
+  network_configuration {
+    subnets         = ["subnet-082cfefbc739f24b4", "subnet-01f6e009cec9021d9"]  # Substitua pelos IDs das suas subnets
+    security_groups = ["sg-0f6507adfb717958a"]  # Substitua pelo seu ID de Security Group
+    assign_public_ip = true
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.ecs_tg.arn
+    container_name   = "api-comentarios"
+    container_port   = 80
+  }
+}
+
+# Output do DNS do Load Balancer
+output "alb_dns_name" {
+  value = aws_lb.ecs_alb.dns_name
 }
