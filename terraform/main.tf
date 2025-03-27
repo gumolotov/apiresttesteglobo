@@ -27,10 +27,20 @@ resource "aws_ecs_task_definition" "api_task" {
       essential = true
       portMappings = [
         {
-          containerPort = 3000
-          hostPort      = 3000
+          containerPort = 80
+          hostPort      = 80
         }
       ]
+    },
+    {
+      name  = "prometheus"
+      image = "prom/prometheus"
+      portMappings = [{ containerPort = 9090, hostPort = 9090 }]
+    },
+    {
+      name  = "grafana"
+      image = "grafana/grafana"
+      portMappings = [{ containerPort = 3000, hostPort = 3000 }]
     }
   ])
 }
