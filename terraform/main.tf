@@ -72,9 +72,9 @@ resource "aws_iam_role" "restapi" {
 }
 
 resource "aws_iam_policy_attachment" "ecs_task_execution" {
-  name       = "ecs-task-execution"
+  name       = "restapi"
   roles      = [aws_iam_role.restapi.name]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/restapi"
 }
 
 resource "aws_ecs_service" "api-comentarios" {
