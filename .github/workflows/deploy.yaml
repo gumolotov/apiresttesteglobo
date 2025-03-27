@@ -37,20 +37,6 @@ jobs:
         working-directory: ./terraform
         run: terraform plan
 
-      - name: Terraform Apply
+      - name: Terraform destroy
         working-directory: ./terraform
-        run: terraform apply -auto-approve  # Aplica as mudanças sem pedir confirmação
-        
-      - name: Login no AWS ECR
-        run: |
-          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 339712833448.dkr.ecr.us-east-1.amazonaws.com/apirestglobo
-
-      - name: Construir e enviar a imagem Docker
-        run: |
-          docker build -t api-comentarios .
-          docker tag api-comentarios:latest 339712833448.dkr.ecr.us-east-1.amazonaws.com/apirestglobo:latest
-          docker push 339712833448.dkr.ecr.us-east-1.amazonaws.com/apirestglobo:latest
-
-      - name: Atualizar serviço ECS
-        run: |
-          aws ecs update-service --cluster api-cluster --service api-comentarios --force-new-deployment
+        run: terraform destroy -auto-approve  # Aplica as mudanças sem pedir confirmação
