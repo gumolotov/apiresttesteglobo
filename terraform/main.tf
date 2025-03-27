@@ -49,6 +49,7 @@ resource "aws_instance" "mongo_instance" {
                 sudo apt update
                 sudo apt install -y mongodb
                 sudo systemctl start mongodb
+}
 
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "terraform-state-restapi-globo"
